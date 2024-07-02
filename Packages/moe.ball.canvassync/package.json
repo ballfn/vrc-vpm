@@ -9,7 +9,6 @@
     "name": "ballfun",
     "email": "vrc@ball.moe",
     "url": "https://vcc.ball.moe"
-  }
   "vpmDependencies":{
     "com.vrchat.worlds":"^3.3"
   }
