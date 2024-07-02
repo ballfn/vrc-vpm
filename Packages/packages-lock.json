@@ -33,7 +33,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.newtonsoft-json": {
-      "version": "2.0.2",
+      "version": "3.2.1",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
@@ -88,16 +88,8 @@
         "com.unity.nuget.newtonsoft-json": "2.0.2"
       }
     },
-    "com.vrchat.core.vpm-resolver": {
-      "version": "file:com.vrchat.core.vpm-resolver",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "2.0.2"
-      }
-    },
-    "com.vrchat.demo-template": {
-      "version": "file:com.vrchat.demo-template",
+    "moe.ball.canvassync": {
+      "version": "file:moe.ball.canvassync",
       "depth": 0,
       "source": "embedded",
       "dependencies": {}
@@ -235,6 +227,7 @@
       "depth": 0,
       "source": "builtin",
       "dependencies": {
+        "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0"
       }

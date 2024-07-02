@@ -1,0 +1,13 @@
+{
+  "name": "moe.ball.canvassync",
+  "displayName": "Canvas Sync",
+  "version": "0.0.1",
+  "unity": "2019.4",
+  "description": "Automatically syncs the state canvas toggle/slider/input field of a world to all players.",
+  "vrchatVersion": "2022.1.1",
+  "author": {
+    "name": "ballfun",
+    "email": "vrc@ball.moe",
+    "url": "https://vcc.ball.moe"
+  }
+}
