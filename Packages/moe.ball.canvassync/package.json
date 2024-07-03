@@ -1,15 +1,15 @@
 {
   "name": "moe.ball.canvassync",
   "displayName": "Canvas Sync",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "unity": "2019.4",
-  "description": "Automatically syncs the state of the canvas of a world to all players. Supports toggle,slider,dropdown,TMP input field.",
+  "description": "Automatically syncs the state of UI elements across all clients, currently supports Toggles, Dropdowns, Sliders, and TMP_InputFields",
   "vrchatVersion": "2022.1.1",
   "author": {
     "name": "ballfun",
     "email": "vrc@ball.moe",
-  "url": "https://vcc.ball.moe"},
+    "url": "https://vcc.ball.moe"},
   "vpmDependencies":{
-    "com.vrchat.worlds":"^3.3"
+    "com.vrchat.worlds":"^3.6"
   }
 }

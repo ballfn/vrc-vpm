@@ -18,6 +18,7 @@ using UdonSharpEditor;
 public class CanvasSync : UdonSharpBehaviour
 {
 #if !COMPILER_UDONSHARP && UNITY_EDITOR
+    public bool editorSetup = true;
     public bool editorAutoChild = true;
 #endif
     [UdonSynced] [HideInInspector] public bool initialized;
@@ -35,7 +36,6 @@ public class CanvasSync : UdonSharpBehaviour
     public TMP_InputField[] inputFields = new TMP_InputField[0];
     [UdonSynced] [HideInInspector] public string[] inputFieldsState;
     
-    [Header("Run _onValueChanged on all UdonBehaviours")]
     public UdonBehaviour[] onValueChanged = new UdonBehaviour[0];
 
 

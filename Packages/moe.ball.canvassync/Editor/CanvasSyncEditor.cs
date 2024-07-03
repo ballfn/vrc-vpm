@@ -12,21 +12,57 @@ using Object = UnityEngine.Object;
 [CustomEditor(typeof(CanvasSync))]
 public class CanvasSyncEditor : Editor
 {
+    private bool showAdvanced = false;
     private bool showDefaultInspector = false;
     private bool listMode = false;
+
     public override void OnInspectorGUI()
     {
         if (UdonSharpGUI.DrawDefaultUdonSharpBehaviourHeader(target)) return;
         CanvasSync canvasSync = (CanvasSync) target;
-
-        showDefaultInspector = EditorGUILayout.Foldout(showDefaultInspector, "Show default inspector");
-        if (showDefaultInspector)
-            DrawDefaultInspector();
-       
-        if(GUILayout.Button(listMode? "List View":"Children View")) listMode = !listMode;
+        if(canvasSync.editorSetup)
+        {
+            EditorGUILayout.LabelField("Canvas Sync",
+                EditorStyles.boldLabel);
+            EditorGUILayout.HelpBox(
+                "This script will sync the state of UI elements across all clients, currently supports Toggles, Dropdowns, Sliders, and TMP_InputFields", MessageType.None);
+            EditorGUILayout.Space();
+            EditorGUILayout.HelpBox("Would you like to automatically add all children of this object to the sync list?", MessageType.Info);
+            if (GUILayout.Button("Yes, automatically add all children"))
+            {
+                canvasSync.editorSetup = false;
+                canvasSync.editorAutoChild = true;
+            }
+            if (GUILayout.Button("No, I will add them manually"))
+            {
+                canvasSync.editorSetup = false;
+                canvasSync.editorAutoChild = false;
+            }
+            
+        }
+        else
+        {
+            if (GUILayout.Button(listMode ? "List View" : "Children View")) listMode = !listMode;
+            
+                    AutomaticPanel(canvasSync, listMode);
+            
+                    showAdvanced = EditorGUILayout.Foldout(showAdvanced, "Advanced Settings");
+                    if (showAdvanced)
+                    {
+                        EditorGUILayout.BeginVertical("Helpbox");
+                        EditorGUILayout.LabelField("call _onValueChanged on UdonBehaviours when value changed");
+                        SerializedProperty onValueChangedProp = serializedObject.FindProperty("onValueChanged");
+                        float propertyHeight = EditorGUI.GetPropertyHeight(onValueChangedProp, true);
+                        Rect propertyRect = EditorGUILayout.GetControlRect(true, propertyHeight);
+                        EditorGUI.PropertyField(propertyRect, onValueChangedProp, true);
+            
+                        showDefaultInspector = EditorGUILayout.Foldout(showDefaultInspector, "Show default inspector");
+                        if (showDefaultInspector)
+                            DrawDefaultInspector();
+                        EditorGUILayout.EndVertical();
+                    }
+        }
         
-        AutomaticPanel(canvasSync,listMode);
-        EditorGUI.PropertyField(EditorGUILayout.GetControlRect(), serializedObject.FindProperty("onValueChanged"), true);
     }
 
     private bool automateChild;
@@ -214,37 +250,6 @@ public class CanvasSyncEditor : Editor
         EditorGUILayout.EndHorizontal();
         return isListenerAdded;
     }
-  
-    public static void OnBuild()
-    {
-        var canvasSync = GameObject.FindObjectsOfType<CanvasSync>();
-
-        foreach (var v in canvasSync)
-        {
-            EditorUtility.SetDirty(v);
-            var ub = UdonSharpEditorUtility.GetBackingUdonBehaviour(v);
-
-                v.toggles = v.GetComponentsInChildren<Toggle>();
-                foreach (var t in v.toggles)
-                {
-                    AddListener(ub, t.onValueChanged, "_OnPressed",t);
-                }
-
-                v.dropdowns = v.GetComponentsInChildren<TMP_Dropdown>();
-                foreach (var t in v.dropdowns)
-                {
-                    AddListener(ub, t.onValueChanged, "_OnPressed",t);
-                }
-
-                v.sliders = v.GetComponentsInChildren<Slider>();
-                foreach (var t in v.sliders)
-                {
-                    AddListener(ub, t.onValueChanged, "_OnPressed",t);
-                }
-            
-        }
-    }
-
     public static void AddListener(UdonBehaviour ub, UnityEventBase eventBase, string methodName, Object target)
     {
         if(eventBase==null) return;
