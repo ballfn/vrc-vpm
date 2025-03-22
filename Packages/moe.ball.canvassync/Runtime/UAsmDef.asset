@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5136146375e9a0a498a72a0091b40cc1, type: 3}
   m_Name: UAsmDef
   m_EditorClassIdentifier: 
-  sourceAssembly: {fileID: 0}
+  sourceAssembly: {fileID: 5897886265953266890, guid: 33b306d9e04d30f4f9ca325c2b5eb077,
+    type: 3}

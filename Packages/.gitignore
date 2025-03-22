@@ -2,4 +2,5 @@
 !com.vrchat.core.*
 
 # Change this to match your new package name
-!moe.ball.canvassync
+!com.vrchat.demo-template 
+!com.vrchat.core.*/

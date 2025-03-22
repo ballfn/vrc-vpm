@@ -3,6 +3,7 @@ using TMPro;
 using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
+using VRC.SDK3.Components;
 using VRC.SDKBase;
 using VRC.Udon;
 using Object = UnityEngine.Object;
@@ -36,6 +37,10 @@ public class CanvasSync : UdonSharpBehaviour
     public TMP_InputField[] inputFields = new TMP_InputField[0];
     [UdonSynced] [HideInInspector] public string[] inputFieldsState;
     
+    
+    public VRCUrlInputField[] urlFields = new VRCUrlInputField[0];
+    [UdonSynced] [HideInInspector] public VRCUrl[] urlState;
+    
     public UdonBehaviour[] onValueChanged = new UdonBehaviour[0];
 
 
@@ -48,6 +53,7 @@ public class CanvasSync : UdonSharpBehaviour
             dropdownsState = new int[dropdowns.Length];
             slidersState = new float[sliders.Length];
             inputFieldsState = new string[inputFields.Length];
+            urlState = new VRCUrl[urlFields.Length];
             initialized = true;
             _UpdateVariables();
             RequestSerialization();
@@ -119,6 +125,15 @@ public class CanvasSync : UdonSharpBehaviour
                 inputFields[i].text = inputFieldsState[i];
             }
         }
+        for (int i = 0; i < urlFields.Length; i++)
+        {
+            if (forced) urlFields[i].SetUrl(VRCUrl.Empty);
+            if (urlFields[i].GetUrl() != urlState[i] || forced)
+            {
+                Debug.Log($"UrlField {urlFields[i].name} {urlState[i]}");
+                urlFields[i].SetUrl(urlState[i]);
+            }
+        }
     }
 
     void OnUpdateEvent()
@@ -148,6 +163,10 @@ public class CanvasSync : UdonSharpBehaviour
         for (int i = 0; i < inputFields.Length; i++)
         {
             inputFieldsState[i] = inputFields[i].text;
+        }
+        for (int i = 0; i < urlFields.Length; i++)
+        {
+            urlState[i] = urlFields[i].GetUrl();
         }
     }
 }

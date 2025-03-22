@@ -7,6 +7,7 @@ using UnityEditor.Events;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using VRC.SDK3.Components;
 using VRC.Udon;
 using Object = UnityEngine.Object;
 [CustomEditor(typeof(CanvasSync))]
@@ -25,7 +26,7 @@ public class CanvasSyncEditor : Editor
             EditorGUILayout.LabelField("Canvas Sync",
                 EditorStyles.boldLabel);
             EditorGUILayout.HelpBox(
-                "This script will sync the state of UI elements across all clients, currently supports Toggles, Dropdowns, Sliders, and TMP_InputFields", MessageType.None);
+                "This script will sync the state of UI elements across all clients, currently supports Toggles, Dropdowns, Sliders, VRCUrlInputField, and TMP_InputFields", MessageType.None);
             EditorGUILayout.Space();
             EditorGUILayout.HelpBox("Would you like to automatically add all children of this object to the sync list?", MessageType.Info);
             if (GUILayout.Button("Yes, automatically add all children"))
@@ -50,7 +51,8 @@ public class CanvasSyncEditor : Editor
                     if (showAdvanced)
                     {
                         EditorGUILayout.BeginVertical("Helpbox");
-                        EditorGUILayout.LabelField("call _onValueChanged on UdonBehaviours when value changed");
+                        EditorGUILayout.HelpBox
+                            ("call _onValueChanged on UdonBehaviours when value changed", MessageType.Info);
                         SerializedProperty onValueChangedProp = serializedObject.FindProperty("onValueChanged");
                         float propertyHeight = EditorGUI.GetPropertyHeight(onValueChangedProp, true);
                         Rect propertyRect = EditorGUILayout.GetControlRect(true, propertyHeight);
@@ -73,9 +75,11 @@ public class CanvasSyncEditor : Editor
     {
         var ub = UdonSharpEditorUtility.GetBackingUdonBehaviour(canvasSync);
         EditorGUILayout.Space();
-        EditorGUILayout.BeginVertical("Helpbox");
+        
         #region Fields Hell
 
+        #region Child View
+        
         if (!listView)
         {
             string auto = canvasSync.editorAutoChild ? "Enabled" : "Disabled";
@@ -116,6 +120,12 @@ public class CanvasSyncEditor : Editor
             }
         }
 
+        #endregion
+
+        #region Toggle
+
+        
+        EditorGUILayout.BeginVertical("Helpbox");
         EditorGUILayout.LabelField("Toggles", EditorStyles.boldLabel);
         var t = listView ? canvasSync.toggles: canvasSync.GetComponentsInChildren<Toggle>();
         for (int i = 0; i < t.Length; i++)
@@ -134,7 +144,8 @@ public class CanvasSyncEditor : Editor
             }
         }
         EditorGUILayout.EndVertical();
-        
+        #endregion
+        #region Dropdown
         EditorGUILayout.BeginVertical("Helpbox");
         EditorGUILayout.LabelField("Dropdowns", EditorStyles.boldLabel);
         var d = listView ? canvasSync.dropdowns: canvasSync.GetComponentsInChildren<TMP_Dropdown>();
@@ -153,7 +164,8 @@ public class CanvasSyncEditor : Editor
             }
         }
         EditorGUILayout.EndVertical();
-        
+        #endregion
+        #region Slider
         EditorGUILayout.BeginVertical("Helpbox");
         EditorGUILayout.LabelField("Sliders", EditorStyles.boldLabel);
         var s = listView ? canvasSync.sliders: canvasSync.GetComponentsInChildren<Slider>();
@@ -172,7 +184,8 @@ public class CanvasSyncEditor : Editor
             }
         }
         EditorGUILayout.EndVertical();
-        
+        #endregion
+        #region InputField
         EditorGUILayout.BeginVertical("Helpbox");
         EditorGUILayout.LabelField("InputFields", EditorStyles.boldLabel);
         var ip = listView ? canvasSync.inputFields: canvasSync.GetComponentsInChildren<TMP_InputField>();
@@ -190,9 +203,33 @@ public class CanvasSyncEditor : Editor
                 if (!canvasSync.inputFields.Contains(addIp)) ArrayUtility.Add(ref canvasSync.inputFields, addIp);
             }
         }
-        #endregion
         
         EditorGUILayout.EndVertical();
+        #endregion
+        #region UrlField
+        EditorGUILayout.BeginVertical("Helpbox");
+        EditorGUILayout.LabelField("VRCUrlInputFields", EditorStyles.boldLabel);
+        var uf = listView ? canvasSync.urlFields : canvasSync.GetComponentsInChildren<VRCUrlInputField>();
+        for (int i = 0; i < uf.Length; i++)
+        {
+            DrawObjectField(uf[i], ub, uf[i]?.onValueChanged, "_OnPressed", ref canvasSync.urlFields, listView);
+        }
+        if (uf.Length == 0) EditorGUILayout.LabelField("No VRCUrlInputField found");
+        if (listView)
+        {
+            EditorGUILayout.Space();
+            var addUf = (VRCUrlInputField)EditorGUILayout.ObjectField("Add", null, typeof(VRCUrlInputField), true);
+            if (addUf)
+            {
+                if (!canvasSync.urlFields.Contains(addUf)) ArrayUtility.Add(ref canvasSync.urlFields, addUf);
+            }
+        }
+        EditorGUILayout.EndVertical();
+        
+        #endregion
+        #endregion
+        
+        
         addAllChild = false;
         removeAllChild = false;
         

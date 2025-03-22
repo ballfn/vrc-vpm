@@ -1,6 +1,6 @@
 {
     "name": "CanvasSync.Runtime",
-    "rootNamespace": "",
+    "rootNamespace": "ballfun",
     "references": [
         "UdonSharp.Runtime",
         "VRC.Udon",
