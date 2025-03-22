@@ -231,7 +231,7 @@
         "com.unity.ai.navigation": "1.1.5"
       }
     },
-    "moe.ballfun.canvassync": {
+    "moe.ball.canvassync": {
       "version": "file:moe.ball.canvassync",
       "depth": 0,
       "source": "embedded",
